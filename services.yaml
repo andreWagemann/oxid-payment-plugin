@@ -1,0 +1,9 @@
+services:
+
+  _defaults:
+    public: false
+    autowire: true
+
+  PaymentAG\Payment\:
+    resource: 'src/Service/*'
+    public: true
