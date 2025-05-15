@@ -5,6 +5,7 @@ namespace PaymentAG\PaymentModule\Model;
 use OxidEsales\Eshop\Application\Model\BasketItem;
 use OxidEsales\EshopCommunity\Core\Registry;
 use PaymentAG\PaymentModule\Helper\Module;
+use PaymentAG\PaymentModule\Helper\Session;
 
 class OrderExtension extends OrderExtension_parent {
 
@@ -48,9 +49,10 @@ class OrderExtension extends OrderExtension_parent {
         // recalculating basket
         $oBasket->calculateBasket(true);
 
-        Registry::getSession()->setVariable('sess_challenge', $this->getId());
-        Registry::getSession()->setVariable('paymentid', $this->oxorder__oxpaymenttype->value);
-        Registry::getSession()->setBasket($oBasket);
+        Session::setSessionChallenge($this->getId());
+        Session::setPaymentId($this->oxorder__oxpaymenttype->value);
+        Session::setPaymentId($this->oxorder__oxpaymenttype->value);
+        Session::setBasket($oBasket);
 
         return $oBasket;
     }

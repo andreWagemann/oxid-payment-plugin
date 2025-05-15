@@ -46,7 +46,7 @@ class CreateRedirectUrl extends Base {
             ]
         ];
 
-        if($this->paymentId == OnlineBankTransfer::IDENTIFIER) {
+        if($this->paymentId == OnlineBankTransfer::IDENTIFIER || $requestData["paymentmode"] === "purchase") {
             unset($requestData["paymentmode"]);
         }
 

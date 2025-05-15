@@ -19,6 +19,25 @@ use PaymentAG\PaymentModule\Model\OrderExtension;
 
 class OrderController extends OrderController_parent {
 
+    public function render(): string {
+        $sSessChallenge = Session::getSessionChallenge();
+        $wasRedirected = Session::isRedirected();
+
+        if (!empty($sSessChallenge) && $wasRedirected === true) {
+            $oOrder = oxNew(OrderExtension::class);
+
+            if ($oOrder->load($sSessChallenge) === true) {
+                if ($oOrder->oxorder__oxtransstatus->value !== Vars::TRANSACTION_STATUS_OK) {
+                    $oOrder->delete();
+                }
+            }
+        }
+
+        Session::deleteIsRedirected();
+
+        return parent::render();
+    }
+
     public function handlePaymentAgReturn() {
         Logger::writeProviderResponse($_REQUEST);
 
@@ -96,13 +115,13 @@ class OrderController extends OrderController_parent {
                 }
             }
         } catch(\Exception $ex) {
-            if ($order) {
+            if($order) {
                 $order->oxorder__oxtransstatus = new Field(Vars::TRANSACTION_STATUS_FAILED);
                 $order->oxorder__oxfolder = new Field('ORDERFOLDER_PROBLEMS');
 
                 $cancelMode = Config::getCancelMode();
 
-                if (!empty($cancelMode) && $cancelMode === 'delete') {
+                if(!empty($cancelMode) && $cancelMode === 'delete') {
                     $order->delete();
                 } else {
                     $order->cancelOrder();
@@ -110,7 +129,7 @@ class OrderController extends OrderController_parent {
 
                 Session::deleteSessionChallenge();
 
-                if ($order->oxorder__cdpaymentstatus->value === Vars::PAYMENT_STATUS_FAILED) {
+                if($order->oxorder__cdpaymentstatus->value === Vars::PAYMENT_STATUS_FAILED) {
                     Session::setPayError(2);
                     $sPaymentUrl = Request::getShopUrl() . 'index.php?cl=payment&payerror=2';
 
