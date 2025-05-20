@@ -48,11 +48,6 @@ class OrderController extends OrderController_parent {
                 throw new PaymentagException(Translator::getTranslatedString(PaymentagException::ERROR_MESSAGE_ORDER_NOT_FOUND));
             }
 
-            if(is_null($order->getBasket())) {
-                #$this->_oBasket = $order->
-                // TODO maybe later
-            }
-
             Order::releaseVoucher($order);
 
             if($order->isPaymentAgPayment()) {
@@ -65,6 +60,14 @@ class OrderController extends OrderController_parent {
                 Session::deleteIsRedirected();
 
                 $aResult = $this->handleRequestValues($validator, $order);
+
+                $details = [
+                    "request" => $_REQUEST,
+                    "response" => $aResult
+                ];
+
+                $order->oxorder__pagpaymentdetails = new Field(json_encode($details));
+                $order->save();
 
                 if($aResult["success"] === false) {
                     $status = Vars::PAYMENT_STATUS_CANCELED;

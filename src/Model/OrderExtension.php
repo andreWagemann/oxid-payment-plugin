@@ -6,8 +6,16 @@ use OxidEsales\Eshop\Application\Model\BasketItem;
 use OxidEsales\EshopCommunity\Core\Registry;
 use PaymentAG\PaymentModule\Helper\Module;
 use PaymentAG\PaymentModule\Helper\Session;
+use PaymentAG\PaymentModule\Helper\Vars;
 
 class OrderExtension extends OrderExtension_parent {
+
+    public function __construct() {
+        parent::__construct();
+
+        $this->addFieldName(Vars::ORDER_COLUMN_PAYMENT_DETAILS);
+    }
+
 
     public function isPaymentAgPayment(): bool {
         return Module::isSupportedPayment($this->getPaymentId());
