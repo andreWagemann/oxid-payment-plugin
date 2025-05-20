@@ -44,6 +44,17 @@ class Order {
         return $order;
     }
 
+    public static function getOrderByReferenceId($referenceId): ?OrderExtension {
+        $db = DatabaseProvider::getDb();
+        $sOrderId = $db->getOne("SELECT oxid FROM oxorder where " . Vars::ORDER_COLUMN_PAYMENT_DETAILS . " LIKE '%\"$referenceId\"%'");
+
+        if($sOrderId === false) {
+            return null;
+        }
+
+        return self::loadOrder($sOrderId);
+    }
+
     private static function loadOrder($sOrderId): ?OrderExtension {
         if(!empty($sOrderId)) {
             /** @var OrderExtension $oOrder */

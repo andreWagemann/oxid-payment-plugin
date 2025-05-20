@@ -27,10 +27,13 @@ class CreateRedirectUrl extends Base {
         $country = Order::getIso3Country($this->order);
 
         $returnUrl = $this->getShopUrl() . '/index.php?cl=order&fnc=handlePaymentAgReturn';
+        $notificationUrl = $this->getShopUrl() . '/index.php?cl=order&fnc=handlePaymentAgNotification';
+
         $requestData = [
             'redirectParameters' => [
                 'successUrl' => $returnUrl,
-                'failUrl' => $returnUrl
+                'failUrl' => $returnUrl,
+                'notificationUrl' => $notificationUrl,
             ],
             'clientID' => Config::getClientId(),
             'paymentKey' => $this->providerIdentifier,

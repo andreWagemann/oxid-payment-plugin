@@ -80,7 +80,7 @@ class OrderController extends OrderController_parent {
                         $sErrorIdent = 'PAYMENTAG_ERROR_ORDER_FAILED';
                     }
 
-                    $order->oxorder__cdpaymentstatus = new Field($status);
+                    $order->oxorder__pagpaymentstatus = new Field($status);
                     $order->save();
 
                     // TODO OBT ERROR
@@ -108,7 +108,7 @@ class OrderController extends OrderController_parent {
                     }
 
                     if($bReturn) {
-                        if($order->oxorder__cdpaymentstatus->value === Vars::PAYMENT_STATUS_PENDING) {
+                        if($order->oxorder__pagpaymentstatus->value === Vars::PAYMENT_STATUS_PENDING) {
                             $order->oxorder__oxtransstatus->setValue(Vars::TRANSACTION_STATUS_PENDING);
                             $order->save();
                         }
@@ -132,7 +132,7 @@ class OrderController extends OrderController_parent {
 
                 Session::deleteSessionChallenge();
 
-                if($order->oxorder__cdpaymentstatus->value === Vars::PAYMENT_STATUS_FAILED) {
+                if($order->oxorder__pagpaymentstatus->value === Vars::PAYMENT_STATUS_FAILED) {
                     Session::setPayError(2);
                     $sPaymentUrl = Request::getShopUrl() . 'index.php?cl=payment&payerror=2';
 
@@ -146,6 +146,32 @@ class OrderController extends OrderController_parent {
         }
 
         return false;
+    }
+
+    public function handlePaymentAgNotification(): array {
+        $referenceId = $_REQUEST['referenceid'] ?? null;
+        $oOrder = Order::getOrderByReferenceId($referenceId);
+        $transactionStatus = $_REQUEST['transactionstatus'] ?? null;
+
+        if(!is_null($oOrder)) {
+            $amount = $_REQUEST['amount'] ?? null;
+
+            if($transactionStatus == 'Charged') {
+                $iAmount = intval($amount) / 100;
+
+                if(abs($iAmount - $oOrder->oxorder__oxtotalordersum->value) < 0.01) {
+                    $timestamp = date("Y-m-d H:i:s");
+
+                    $oOrder->oxorder__oxpaid = new Field ($timestamp);
+                    $oOrder->oxorder__oxtransstatus = new Field(Vars::TRANSACTION_STATUS_OK);
+                    $oOrder->oxorder__pagpaymentstatus = new Field(Vars::PAYMENT_STATUS_OK);
+                    $oOrder->save();
+                }
+            }
+        }
+
+        echo json_encode(['success' => true, 'status' => $transactionStatus]);
+        die();
     }
 
     /**
@@ -238,7 +264,7 @@ class OrderController extends OrderController_parent {
         switch($transactionStatus) {
             case 'Reserved':
                 $order->oxorder__oxtransid = new Field("{$referenceid}:{$transactionid}");
-                $order->oxorder__cdpaymentstatus = new Field(Vars::PAYMENT_STATUS_PENDING);
+                $order->oxorder__pagpaymentstatus = new Field(Vars::PAYMENT_STATUS_PENDING);
                 break;
 
             case 'Charged':
@@ -246,9 +272,9 @@ class OrderController extends OrderController_parent {
 
                 if(abs($paidAmount - $order->oxorder__oxtotalordersum->value) < 0.01) {
                     $order->oxorder__oxpaid = new Field (date("Y-m-d H:i:s"));
-                    $order->oxorder__cdpaymentstatus = new Field(Vars::PAYMENT_STATUS_OK);
+                    $order->oxorder__pagpaymentstatus = new Field(Vars::PAYMENT_STATUS_OK);
                 } else {
-                    $order->oxorder__cdpaymentstatus = new Field(Vars::PAYMENT_STATUS_PENDING);
+                    $order->oxorder__pagpaymentstatus = new Field(Vars::PAYMENT_STATUS_PENDING);
                 }
 
                 break;

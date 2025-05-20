@@ -39,7 +39,7 @@ abstract class Base {
 
     private function setOrderVars(OrderExtension $order) {
         $order->oxorder__oxtransstatus = new Field(Vars::TRANSACTION_STATUS_PENDING);
-        $order->oxorder__cdpaymentstatus = new Field(Vars::PAYMENT_STATUS_STARTED);
+        $order->oxorder__pagpaymentstatus = new Field(Vars::PAYMENT_STATUS_STARTED);
         $order->oxorder__oxfolder = new Field('ORDERFOLDER_NEW');
         $order->save();
     }

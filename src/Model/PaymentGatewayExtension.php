@@ -33,7 +33,7 @@ class PaymentGatewayExtension extends PaymentgatewayExtension_parent {
 
             if(strlen($redirectUrl) > 0) {
                 $oOrder->oxorder__oxtransstatus = new Field(Vars::TRANSACTION_STATUS_PENDING);
-                $oOrder->oxorder__cdpaymentstatus = new Field(Vars::PAYMENT_STATUS_STARTED);
+                $oOrder->oxorder__pagpaymentstatus = new Field(Vars::PAYMENT_STATUS_STARTED);
                 $oOrder->oxorder__oxfolder = new Field('ORDERFOLDER_NEW');
                 $oOrder->save();
 

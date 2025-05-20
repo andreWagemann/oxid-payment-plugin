@@ -14,6 +14,7 @@ class OrderExtension extends OrderExtension_parent {
         parent::__construct();
 
         $this->addFieldName(Vars::ORDER_COLUMN_PAYMENT_DETAILS);
+        $this->addFieldName(Vars::ORDER_COLUMN_PAYMENT_STATUS);
     }
 
 
