@@ -10,6 +10,7 @@ class Events {
 
     public static function onActivate() {
         self::executeSqlFromFile(__DIR__ . '/../../migrations/install.sql');
+        self::executeSqlFromFile(__DIR__ . '/../../migrations/order.sql');
     }
 
     public static function onDeactivate() {
