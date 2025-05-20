@@ -28,7 +28,8 @@ class OrderController extends OrderController_parent {
 
             if ($oOrder->load($sSessChallenge) === true) {
                 if ($oOrder->oxorder__oxtransstatus->value !== Vars::TRANSACTION_STATUS_OK) {
-                    $oOrder->delete();
+                    $oOrder->cancelOrder();
+                    Session::deleteSessionChallenge();
                 }
             }
         }
