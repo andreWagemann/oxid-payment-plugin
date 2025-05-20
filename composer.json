@@ -2,7 +2,7 @@
     "name": "payment-ag/payment-module",
     "description": "Payment Module",
     "type": "oxideshop-module",
-    "version": "1.0.2",
+    "version": "1.0.4",
     "keywords": [
         "oxid",
         "modules",

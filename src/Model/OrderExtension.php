@@ -30,40 +30,10 @@ class OrderExtension extends OrderExtension_parent {
         $session = Registry::getSession();
         $oBasket = $session->getBasket();
 
-        if($oBasket) {
-            $oBasket = $this->recreateBasket();
-            $session->setBasket($oBasket);
-        }
-
         $this->_oBasket = $oBasket;
 
         $this->finalizeReturnMode = true;
         $this->finishOrderReturnMode = true;
-    }
-
-    public function recreateBasket(): ?\OxidEsales\Eshop\Application\Model\Basket {
-        $this->reloadDiscount(true);
-        $oBasket = $this->_getOrderBasket();
-
-        // add this order articles to virtual basket and recalculates basket
-        $aItems = $this->getOrderArticles(true);
-
-        /** @var BasketItem $item */
-        foreach($aItems as $item) {
-            $item->getArticle(false, null, true);
-        }
-
-        $this->_addOrderArticlesToBasket($oBasket, $aItems);
-
-        // recalculating basket
-        $oBasket->calculateBasket(true);
-
-        Session::setSessionChallenge($this->getId());
-        Session::setPaymentId($this->oxorder__oxpaymenttype->value);
-        Session::setPaymentId($this->oxorder__oxpaymenttype->value);
-        Session::setBasket($oBasket);
-
-        return $oBasket;
     }
 
     public function setOrdernumber() {

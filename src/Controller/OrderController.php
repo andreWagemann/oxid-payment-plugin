@@ -88,7 +88,6 @@ class OrderController extends OrderController_parent {
 
                     throw new PaymentagPaymentException(Translator::getTranslatedString($sErrorIdent));
                 } else {
-                    // TODO: TEST recreate basket
                     $order->paymentagPrepareFinalizeOrder();
                     $bReturn = null;
 
@@ -129,6 +128,7 @@ class OrderController extends OrderController_parent {
                     $order->delete();
                 } else {
                     $order->cancelOrder();
+                    Session::deleteSessionChallenge();
                 }
 
                 Session::deleteSessionChallenge();
@@ -219,19 +219,15 @@ class OrderController extends OrderController_parent {
 
     private function handleRequestValues(ApiUrlValidatorService $request, OrderExtension $order) {
         $transactionStatus = $request->get("transactionstatus");
-        $internal_order_id = $request->get("referenceid");
-        $providerpurpose = $request->get("providerpurpose");
         $referenceid = $request->get("referenceid");
         $transactionid = $request->get("transactionid");
         $amount = $request->get("amount");
         $errornumber = $request->get("errornumber");
         $errortext = $request->get("errortext");
 
-        $order->oxorder__providerpurpose = new Field($providerpurpose);
-
         if(!empty($errornumber) || !empty($errortext)) {
-            $order->oxorder__providerpurpose = new Field($errortext);
             $order->cancelOrder();
+            Session::deleteSessionChallenge();
             return ['success' => false, 'status' => 'failed', 'errorId' => $errornumber, 'error' => $errortext];
         }
 
@@ -243,6 +239,7 @@ class OrderController extends OrderController_parent {
 
             default:
                 $order->cancelOrder();
+                Session::deleteSessionChallenge();
                 return ['success' => false, 'status' => $transactionStatus, 'error' => 'Unsupported transaction status'];
         }
 
