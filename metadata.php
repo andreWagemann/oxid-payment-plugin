@@ -6,10 +6,12 @@
 
 use OxidEsales\Eshop\Application\Controller\OrderController as OxidOrderController;
 use OxidEsales\Eshop\Application\Model\Order;
+use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\PaymentGateway;
 use PaymentAG\PaymentModule\Controller\OrderController;
 use PaymentAG\PaymentModule\Helper\Config;
 use PaymentAG\PaymentModule\Model\OrderExtension;
+use PaymentAG\PaymentModule\Model\PaymentExtension;
 use PaymentAG\PaymentModule\Model\PaymentGatewayExtension;
 
 $sMetadataVersion = '2.1';
@@ -30,7 +32,8 @@ $aModule = [
     'extend' => [
         PaymentGateway::class => PaymentGatewayExtension::class,
         Order::class => OrderExtension::class,
-        OxidOrderController::class => OrderController::class
+        OxidOrderController::class => OrderController::class,
+        Payment::class => PaymentExtension::class
     ],
 
     'events' => [
@@ -276,6 +279,12 @@ $aModule = [
                 "additionaldata",
                 "timestamp",
             ),
+        ],
+        [
+            "group" => "internal",
+            "name" => Config::KEY_PAYMENT_ADD_PERCENT,
+            "type" => "num",
+            "value" => 0
         ]
     ]
 ];

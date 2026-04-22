@@ -14,6 +14,7 @@ class Config {
     const KEY_FRONTEND_ERROR_PARAMS = "paymentag_frontend_error_params";
     const KEY_CANCEL_MODE = "paymentag_cancel_mode";
     const KEY_PAYMENT_MODE = "paymentag_pay_mode";
+    const KEY_PAYMENT_ADD_PERCENT = "paymentag_pay_add_percent";
 
     private static function get($key) {
         return Registry::getConfig()->getConfigParam($key);
@@ -49,5 +50,9 @@ class Config {
 
     public static function getPaymentMode() {
         return self::get(self::KEY_PAYMENT_MODE);
+    }
+
+    public static function getPaymentAddPercent() {
+        return self::get(self::KEY_PAYMENT_ADD_PERCENT);
     }
 }

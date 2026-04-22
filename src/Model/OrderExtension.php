@@ -4,6 +4,7 @@ namespace PaymentAG\PaymentModule\Model;
 
 use OxidEsales\Eshop\Application\Model\BasketItem;
 use OxidEsales\EshopCommunity\Core\Registry;
+use PaymentAG\PaymentModule\Helper\Config;
 use PaymentAG\PaymentModule\Helper\Module;
 use PaymentAG\PaymentModule\Helper\Session;
 use PaymentAG\PaymentModule\Helper\Vars;

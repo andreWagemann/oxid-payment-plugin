@@ -34,4 +34,6 @@ $aLang = [
     'SHOP_MODULE_paymentag_cancel_mode' => 'Verhalten bei Abbruch',
     'SHOP_MODULE_paymentag_cancel_mode_cancel' => 'Bestellung abbrechen',
     'SHOP_MODULE_paymentag_cancel_mode_delete' => 'Bestellung löschen',
+
+    'SHOP_MODULE_paymentag_pay_add_percent ' => '% Aufschlag zum Bruttopreis',
 ];

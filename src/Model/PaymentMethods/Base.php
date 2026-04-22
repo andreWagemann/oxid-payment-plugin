@@ -6,6 +6,7 @@ use OxidEsales\Eshop\Core\Field;
 use PaymentAG\PaymentModule\Api\Requests\CreateBasket;
 use PaymentAG\PaymentModule\Api\Requests\CreateRedirectUrl;
 use PaymentAG\PaymentModule\Api\Requests\CreateCustomer;
+use PaymentAG\PaymentModule\Helper\Config;
 use PaymentAG\PaymentModule\Helper\Vars;
 use PaymentAG\PaymentModule\Model\OrderExtension;
 
@@ -38,6 +39,7 @@ abstract class Base {
     abstract function getProviderIdentifier(): string;
 
     private function setOrderVars(OrderExtension $order) {
+
         $order->oxorder__oxtransstatus = new Field(Vars::TRANSACTION_STATUS_PENDING);
         $order->oxorder__pagpaymentstatus = new Field(Vars::PAYMENT_STATUS_STARTED);
         $order->oxorder__oxfolder = new Field('ORDERFOLDER_NEW');
