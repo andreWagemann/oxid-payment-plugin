@@ -49,6 +49,10 @@ class CreateRedirectUrl extends Base {
             ]
         ];
 
+        if ((int)Config::getPaymentAddPercent() > 0) {
+            $requestData['amount'] = $requestData['amount'] * (((int)Config::getPaymentAddPercent() / 100) + 1);
+        }
+
         if($this->paymentId == OnlineBankTransfer::IDENTIFIER || $requestData["paymentmode"] === "purchase") {
             unset($requestData["paymentmode"]);
         }

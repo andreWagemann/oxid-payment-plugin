@@ -24,7 +24,7 @@ $aModule = [
     'title' => 'PaymentAG payment module',
     'description' => '',
     'thumbnail' => 'out/pictures/logo.png',
-    'version' => '1.0.5',
+    'version' => '1.0.6',
     'author' => 'PaymentAG',
     'url' => '',
     'email' => '',
@@ -33,7 +33,6 @@ $aModule = [
         PaymentGateway::class => PaymentGatewayExtension::class,
         Order::class => OrderExtension::class,
         OxidOrderController::class => OrderController::class,
-        Payment::class => PaymentExtension::class
     ],
 
     'events' => [
