@@ -4,6 +4,7 @@ namespace PaymentAG\PaymentModule\Api\Requests;
 
 use OxidEsales\Eshop\Application\Model\OrderArticle;
 use OxidEsales\Eshop\Core\Price;
+use PaymentAG\PaymentModule\Helper\Config;
 use PaymentAG\PaymentModule\Helper\Order;
 use PaymentAG\PaymentModule\Model\OrderExtension;
 
@@ -36,6 +37,9 @@ class CreateBasket extends Base {
                 "taxAmount" => (int)$tax,
                 "taxPercent" => $taxRate
             ];
+        }
+        if ((int)Config::getPaymentAddPercent() > 0 ) {
+            $items[0]['pricePerUnitGross'] =  ceil($items[0]['pricePerUnitGross'] * (((int)Config::getPaymentAddPercent() / 100) + 1));
         }
 
         /** @var Price $shipping */
