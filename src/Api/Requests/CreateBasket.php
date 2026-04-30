@@ -19,6 +19,11 @@ class CreateBasket extends Base {
     function fire() {
         $items = [];
         $currency = $this->order->getOrderCurrency()->name;
+        $totalOrderSumOrg = Order::getPriceInCents($this->order->getTotalOrderSum());
+        $totalOrderSumNew = $totalOrderSumOrg;
+         if ((int)Config::getPaymentAddPercent() > 0) {
+             $totalOrderSumNew = ceil($totalOrderSumOrg * (((int)Config::getPaymentAddPercent() / 100) + 1));
+         }
 
         foreach($this->order->getOrderArticles() as $orderArticle) {
             $price = Order::getPriceInCents($orderArticle->oxorderarticles__oxbrutprice->value);
@@ -39,7 +44,7 @@ class CreateBasket extends Base {
             ];
         }
         if ((int)Config::getPaymentAddPercent() > 0 ) {
-            $items[0]['pricePerUnitGross'] =  ceil($items[0]['pricePerUnitGross'] * (((int)Config::getPaymentAddPercent() / 100) + 1));
+            $items[0]['pricePerUnitGross'] += ($totalOrderSumNew - $totalOrderSumOrg);
         }
 
         /** @var Price $shipping */
