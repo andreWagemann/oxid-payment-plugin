@@ -45,6 +45,7 @@ class CreateBasket extends Base {
         }
         if ((int)Config::getPaymentAddPercent() > 0 ) {
             $items[0]['pricePerUnitGross'] += ($totalOrderSumNew - $totalOrderSumOrg);
+            $items[0]['taxAmount'] = ceil($items[0]['pricePerUnitGross'] / (100 + $items[0]['taxPercent']) * $items[0]['taxPercent']);
         }
 
         /** @var Price $shipping */
